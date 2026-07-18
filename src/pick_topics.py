@@ -7,7 +7,8 @@ Heuristic scoring:
 
 Two outputs:
   1. IM-friendly short message (stdout, for cron session to relay to Sean)
-  2. Full markdown report → Obsidian vault `queries/daily-pick-YYYY-MM-DD.md`
+  2. Full markdown report → Obsidian vault `sources/github-trending-pick-YYYY-MM-DD.md`
+     (lives in flat sources/, alongside `github-trending-YYYY-MM-DD.md`)
 
 Run:
     python src/pick_topics.py
@@ -34,9 +35,9 @@ DATA_DIR = PROJECT_ROOT / "data"
 
 DEFAULT_VAULT = r"G:\我的雲端硬碟\000 工作記錄\Claude workspace\Obsidian"
 VAULT_PATH = Path(os.environ.get("VAULT_PATH", DEFAULT_VAULT))
-# Topic picks live alongside the full daily report in sources/github-trending/
-# (they're derived from the same raw data — same source category, not a query)
-SOURCES_SUBDIR = Path("sources") / "github-trending"
+# Sean keeps sources/ flat (no subfolders). Both full report and topic-pick
+# live at the top of sources/ with topic-prefixed filenames.
+SOURCES_SUBDIR = Path("sources")
 
 TOP_N = int(os.environ.get("TOPIC_PICK_N", "5"))
 
@@ -219,7 +220,7 @@ def format_markdown(
     lines.append("## 怎麼用這份精選")
     lines.append("")
     lines.append("- 每個專案都可以是一則 IG carousel / 短影片的主題")
-    lines.append(f"- 完整 14 個專案請看 vault 內 `sources/github-trending/{report_date}.md`")
+    lines.append(f"- 完整 14 個專案請看 vault 內 `sources/github-trending-{report_date}.md`")
     lines.append("- 看到有興趣的就點進去看 README，判斷值不值得展開")
     lines.append("- 如果有想深挖的，跟 Mavis 講，直接生成 carousel 草稿")
     lines.append("")
@@ -247,7 +248,7 @@ def main() -> int:
 
     picks = pick_top_n(repos, TOP_N)
     source_url = payload.get("source_url", "")
-    source_file = f"sources/github-trending/{today}.md"
+    source_file = f"sources/github-trending-{today}.md"
 
     # Output 1: IM message (stdout) — for cron session to relay
     im_msg = format_im_message(picks, today)
@@ -256,18 +257,18 @@ def main() -> int:
     print("===IM_MESSAGE_END===")
     print()
 
-    # Output 2: full markdown → Obsidian vault (sources/github-trending/, alongside full daily report)
+    # Output 2: full markdown → Obsidian vault (flat in sources/, alongside full daily report)
     md = format_markdown(picks, today, source_url, source_file)
     out_dir = VAULT_PATH / SOURCES_SUBDIR
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"daily-pick-{today}.md"
+    out_path = out_dir / f"github-trending-pick-{today}.md"
     out_path.write_text(md, encoding="utf-8")
     print(f"WROTE_VAULT: {out_path}")
 
     # Output 3: project mirror
     output_dir = PROJECT_ROOT / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
-    mirror = output_dir / f"daily-pick-{today}.md"
+    mirror = output_dir / f"github-trending-pick-{today}.md"
     mirror.write_text(md, encoding="utf-8")
     print(f"WROTE_MIRROR: {mirror}")
 

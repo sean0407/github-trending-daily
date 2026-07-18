@@ -3,7 +3,7 @@ Generate daily GitHub Trending report and push to Obsidian vault.
 
 Reads latest data/trending-YYYY-MM-DD.json, renders a Markdown file with
 frontmatter, and writes it to:
-    <VAULT>/sources/github-trending/YYYY-MM-DD.md
+    <VAULT>/sources/github-trending-YYYY-MM-DD.md
 
 Run:
     python src/generate_daily.py
@@ -25,7 +25,8 @@ LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
 DEFAULT_VAULT = r"G:\我的雲端硬碟\000 工作記錄\Claude workspace\Obsidian"
 VAULT_PATH = Path(os.environ.get("VAULT_PATH", DEFAULT_VAULT))
-SOURCES_SUBDIR = Path("sources") / "github-trending"
+# Sean keeps sources/ flat — no subfolders. Use topic-prefixed filename.
+SOURCES_SUBDIR = Path("sources")
 
 
 # --- Helpers ----------------------------------------------------------------
@@ -172,7 +173,7 @@ def main() -> int:
         # Build vault path
         out_dir = VAULT_PATH / SOURCES_SUBDIR
         out_dir.mkdir(parents=True, exist_ok=True)
-        out_path = out_dir / f"{report_date}.md"
+        out_path = out_dir / f"github-trending-{report_date}.md"
 
         if out_path.exists():
             log(f"[generate] WARN: {out_path} already exists — overwriting")
