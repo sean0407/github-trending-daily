@@ -34,7 +34,9 @@ DATA_DIR = PROJECT_ROOT / "data"
 
 DEFAULT_VAULT = r"G:\我的雲端硬碟\000 工作記錄\Claude workspace\Obsidian"
 VAULT_PATH = Path(os.environ.get("VAULT_PATH", DEFAULT_VAULT))
-QUERIES_SUBDIR = "queries"
+# Topic picks live alongside the full daily report in sources/github-trending/
+# (they're derived from the same raw data — same source category, not a query)
+SOURCES_SUBDIR = Path("sources") / "github-trending"
 
 TOP_N = int(os.environ.get("TOPIC_PICK_N", "5"))
 
@@ -177,7 +179,7 @@ def format_markdown(
     lines: list[str] = []
     lines.append("---")
     lines.append(f"created: {report_date}")
-    lines.append('tags: ["queries", "github", "trending", "topic-pick", "daily"]')
+    lines.append('tags: ["sources", "github", "trending", "topic-pick", "daily"]')
     lines.append(f'source: "{source_file}"')
     lines.append(f'source_url: "{source_url}"')
     lines.append("---")
@@ -254,9 +256,9 @@ def main() -> int:
     print("===IM_MESSAGE_END===")
     print()
 
-    # Output 2: full markdown → Obsidian vault
+    # Output 2: full markdown → Obsidian vault (sources/github-trending/, alongside full daily report)
     md = format_markdown(picks, today, source_url, source_file)
-    out_dir = VAULT_PATH / QUERIES_SUBDIR
+    out_dir = VAULT_PATH / SOURCES_SUBDIR
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"daily-pick-{today}.md"
     out_path.write_text(md, encoding="utf-8")

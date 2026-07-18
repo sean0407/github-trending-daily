@@ -9,7 +9,7 @@
 | 時間 | 工作 | 輸出 |
 |---|---|---|
 | 04:00 | 抓 trending + 產完整日報 | `vault/sources/github-trending/YYYY-MM-DD.md` |
-| 04:30 | 挑 Top 5 選題 + 推播給 Sean | `vault/queries/daily-pick-YYYY-MM-DD.md` + IM 通知 |
+| 04:30 | 挑 Top 5 選題 + 推播給 Sean | `vault/sources/github-trending/daily-pick-YYYY-MM-DD.md` + IM 通知 |
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ score = stars_today * 10 + keyword_matches * 100
 
 - 原始資料：`data/trending-YYYY-MM-DD.json`
 - 完整日報：`G:\我的雲端硬碟\000 工作記錄\Claude workspace\Obsidian\sources\github-trending\YYYY-MM-DD.md`
-- Top 5 選題：`G:\我的雲端硬碟\000 工作記錄\Claude workspace\Obsidian\queries\daily-pick-YYYY-MM-DD.md`
+- Top 5 選題：`G:\我的雲端硬碟\000 工作記錄\Claude workspace\Obsidian\sources\github-trending\daily-pick-YYYY-MM-DD.md`
 - 跑版紀錄：`logs/`
 
 ## Config
