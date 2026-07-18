@@ -1,0 +1,20 @@
+# Secrets / runtime state
+data/
+output/
+logs/
+.env
+.env.local
+
+# LLM agent files
+AGENTS.md
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
